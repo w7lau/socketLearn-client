@@ -93,7 +93,7 @@ void T_x()
 			
 			if (utf8_to_gbk(recd.name) == "连接服务器成功………………")
 			{
-				cout << "当前可以使用指令：list" << endl;
+				cout << "当前可以使用指令：list、read" << endl;
 				cout  << utf8_to_gbk(recd.name) <<endl;
 				Writemsg(sendd, sock_c);
 				i = 0;
@@ -145,6 +145,10 @@ void T_x()
 						i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
 					}
 				}
+
+			}
+			else if (utf8_to_gbk(recd.name) == "write_begining")
+			{
 
 			}
 			else
