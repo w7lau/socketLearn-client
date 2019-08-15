@@ -104,14 +104,14 @@ void T_x()
 
 				i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
 				//i = recv(sock_c, recv_buf, sizeof(recv_buf), 0);
-				while (1)
+				while (i>0)
 				{
 					if (utf8_to_gbk(recd.name) == "List_ending")
 					{
 						//cout << "ID：" << utf8_to_gbk(recd.name) << "  死亡次数：" << recd.num << endl;
 						i = 0;
 						Writemsg(sendd, sock_c);
-						cout << "here" << endl;
+						//cout << "here" << endl;
 						break;
 					}
 					else
@@ -128,20 +128,20 @@ void T_x()
 				
 				Writemsg(sendd, sock_c,"请输入要查看的ID：");
 				i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
-				while (1)
+				while (i>0)
 				{
 					if (utf8_to_gbk(recd.name) == "Name_ending")
 					{
 						i = 0;
 						Writemsg(sendd, sock_c);
-						cout << "here111" << endl;
+						//cout << "here111" << endl;
 						break;
 					}
 					else
 					{
-						cout << "时间：" << utf8_to_gbk(recd.name) << endl;
+						cout << "时间：" << utf8_to_gbk(recd.name);
 						i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
-						cout << "犯罪：" << utf8_to_gbk(recd.name) << endl;
+						cout << "\t犯罪：" << utf8_to_gbk(recd.name) << endl;
 						i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
 					}
 				}
