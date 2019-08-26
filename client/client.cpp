@@ -47,7 +47,7 @@ void Writemsg(sData sendd, SOCKET sock_c,string zl="请输入指令：")
 	cin >> ta;
 	//cout << gbk_to_utf8(ta) << endl;
 	strcpy_s(sendd.name, gbk_to_utf8(ta).c_str());
-	cout << "发送：" << ta << endl;
+	//cout << "发送：" << ta << endl;
 	send(sock_c, (char*)&sendd, sizeof(sendd), 0);
 }
 void T_x()
@@ -69,6 +69,7 @@ void T_x()
 	if (0 != connect(sock_c, (SOCKADDR*)&addrSrv, sizeof(SOCKADDR)))
 	{
 		std::cout << "连接失败……" << std::endl;
+		cout << "可能卡了，重新开一下，可能被墙了，可能服务器没话费了" << endl;
 		return;
 	}
 	else
@@ -93,7 +94,7 @@ void T_x()
 			
 			if (utf8_to_gbk(recd.name) == "连接服务器成功………………")
 			{
-				cout << "当前可以使用指令：list、read" << endl;
+				cout << "当前可以使用指令：list、read、write" << endl;
 				cout  << utf8_to_gbk(recd.name) <<endl;
 				Writemsg(sendd, sock_c);
 				i = 0;
@@ -103,6 +104,7 @@ void T_x()
 				//char recv_buf[1024] = "";
 
 				i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
+				//cout << "text：" << utf8_to_gbk(recd.name) << "  number：" << recd.num << endl;
 				//i = recv(sock_c, recv_buf, sizeof(recv_buf), 0);
 				while (i>0)
 				{
@@ -116,7 +118,7 @@ void T_x()
 					}
 					else
 					{
-						cout << "ID：" << utf8_to_gbk(recd.name) << "  死亡次数：" << recd.num << endl;
+						cout << "ID：" << utf8_to_gbk(recd.name) << "  犯罪次数：" << recd.num << endl;
 						i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
 					}
 				}
@@ -139,21 +141,40 @@ void T_x()
 					}
 					else
 					{
-						cout << "时间：" << utf8_to_gbk(recd.name);
+						//char t1=''
+						string sss= utf8_to_gbk(recd.name);
+						for (int i = 0; i < sss.length(); i++)
+						{
+							if (sss[i]=='_')
+							{
+								sss[i] = ' ';
+							}
+						}
+						cout << "时间：" << sss;
 						i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
-						cout << "\t犯罪：" << utf8_to_gbk(recd.name) << endl;
+						cout << "\t罪行：" << utf8_to_gbk(recd.name) << endl;
 						i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
 					}
 				}
 
 			}
-			else if (utf8_to_gbk(recd.name) == "write_begining")
+			else if (utf8_to_gbk(recd.name) == "Write_begining")
 			{
-
+				//cout << "text：" << utf8_to_gbk(recd.name) << "  number：" << recd.num << endl;
+				Writemsg(sendd, sock_c, "请输入要记录的ID：");
+				recv(sock_c, (char*)&recd, sizeof(recd), 0);
+				while (utf8_to_gbk(recd.name) != "Write_midding")
+				{
+					recv(sock_c, (char*)&recd, sizeof(recd), 0);
+				}
+				//cout << "text：" << utf8_to_gbk(recd.name) << "  number：" << recd.num << endl;
+				Writemsg(sendd, sock_c, "请输入要记录的罪行：");
+				cout << "记录成功" << endl;
+				//i = recv(sock_c, (char*)&recd, sizeof(recd), 0);
 			}
 			else
 			{
-				cout << "name：" << utf8_to_gbk(recd.name) << "  num：" << recd.num << endl;
+				//cout << "name：" << utf8_to_gbk(recd.name) << "  num：" << recd.num << endl;
 				Writemsg(sendd, sock_c);
 				i = 0;
 			}
@@ -177,17 +198,15 @@ int main()
 	//cout << "发送：" << sendBuf << endl;
 	//send(sock_c, sendBuf, strlen(sendBuf) + 1, 0);
 
-
+	cout << "自动化的功能算法问题好麻烦，先当一个云公用记事本用着吧，其他的以后再说吧……" << endl;
+	cout << "还有好多细节暂时懒得弄了，例如如果发一半发现卡着不动了，可能卡住了，没写重连，重启吧，重连以后再说……" << endl;
 
 	thread *T = new thread(T_x);
 	T->join();
 	T->detach();
 
 		
-	while (1)
-	{
-
-	};
+	system("pause");
 
 		//recv(sock_c, (char*)&recd, sizeof(recd), 0);
 		//cout << "接收到消息：" << utf8_to_gbk(recd.name) << endl;
